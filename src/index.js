@@ -2,31 +2,49 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
+Square = props => {
+  return (
+    <button className="square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  );
+};
+
 class Square extends React.Component {
-  // Add constructor to the class to initialize the state
-  constructor(props) {
-    // In JavaScript classes, you need to explicitly call super();
-    // when defining the constructor of a subclass.
-    super(props);
-    this.state = {
-      value: null
-    };
-  }
   render() {
     return (
       //  Note that we’re passing a function as the onClick prop.
       //  Doing onClick={alert('click')} would alert immediately
       //  instead of when the button is clicked.
-      <button className="square" onClick={() => this.setState({ value: "X" })}>
-        {this.state.value}
+      <button className="square" onClick={() => this.props.onClick()}>
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null)
+    };
+  }
+
+  handleClick(i) {
+    // We call .slice() to copy the squares array instead of mutating the existing array
+    const squares = this.state.squares.slice();
+    squares[i] = "X";
+    this.setState({ squares: squares });
+  }
+
   renderSquare(i) {
-    return <Square value={i} />;
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    );
   }
 
   render() {
